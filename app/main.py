@@ -1,4 +1,4 @@
-from api.app.repository.ElasticRepository import ElasticRepository
+from app.repository.ElasticRepository import ElasticRepository
 from services.ingest.document.IngestorService import IngestorService
 
 if __name__ == "__main__":

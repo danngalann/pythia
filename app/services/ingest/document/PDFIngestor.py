@@ -3,7 +3,7 @@ from typing import List
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
 
-from api.app.repository.ElasticRepository import ElasticRepository
+from app.repository.ElasticRepository import ElasticRepository
 from .DocumentIngestor import DocumentIngestor
 
 
