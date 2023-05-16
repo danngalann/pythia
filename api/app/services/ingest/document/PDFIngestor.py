@@ -1,26 +1,29 @@
 from typing import List
 
+
 from .DocumentIngestor import DocumentIngestor
 from PyPDF2 import PdfReader
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.vectorstores import ElasticVectorSearch, Pinecone, Weaviate, FAISS
+from langchain.vectorstores import ElasticVectorSearch
 
 
 class PDFIngestor(DocumentIngestor):
     """Ingestor for PDF documents"""
+
+    def __init__(self):
+        self.vectorstore = ElasticVectorSearch(
+            elasticsearch_url='http://localhost:9200',
+            index_name="pythia",
+            embedding=HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
+        )
 
     def ingest(self, document_path: str):
         """Ingests a PDF document into the database"""
         reader = PdfReader(document_path)
         raw_text = self.__get_raw_text(reader)
         split_texts = self.__split_text(raw_text)
-        document = self.__get_embeddings(split_texts)
-
-        return document
-
-    def search(self, document: FAISS, query: str) -> List[str]:
-        return [doc.page_content for doc in document.similarity_search(query)]
+        self.__store_embeddings(split_texts)
 
     def __get_raw_text(self, reader: PdfReader) -> str:
         """Gets the raw text from a PDF document"""
@@ -40,7 +43,6 @@ class PDFIngestor(DocumentIngestor):
 
         return text_splitter.split_text(raw_text)
 
-    def __get_embeddings(self, texts: List[str]) -> FAISS:
-        """Gets the embeddings for a text"""
-        embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
-        return FAISS.from_texts(texts, embeddings)
+    def __store_embeddings(self, texts: List[str]):
+        """Stores the embeddings for a document"""
+        self.vectorstore.add_texts(texts)

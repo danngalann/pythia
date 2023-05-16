@@ -1,0 +1,16 @@
+version: '3'
+services:
+  elasticsearch:
+    container_name: pythia_elastic_vectorstore
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.1
+    ports:
+      - 9200:9200
+    volumes:
+      - pythia_elastic_vectorstore:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
+      - xpack.security.enabled=false
+
+volumes:
+  pythia_elastic_vectorstore:
