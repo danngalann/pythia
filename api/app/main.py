@@ -1,5 +1,11 @@
+from api.app.repository.ElasticRepository import ElasticRepository
 from services.ingest.document.PDFIngestor import PDFIngestor
 
 if __name__ == "__main__":
     pdf_ingestor = PDFIngestor()
-    document = pdf_ingestor.ingest("/home/daniel/Documents/Attention Is All You Need.pdf")
+    pdf_ingestor.ingest("/home/daniel/Documents/Attention Is All You Need.pdf")
+
+    repository = ElasticRepository()
+    results = repository.search("What are transformers?")
+
+    print(results[0].page_content)

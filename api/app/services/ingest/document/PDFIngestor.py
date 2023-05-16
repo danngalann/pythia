@@ -1,22 +1,17 @@
 from typing import List
 
-
-from .DocumentIngestor import DocumentIngestor
 from PyPDF2 import PdfReader
-from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.vectorstores import ElasticVectorSearch
+
+from api.app.repository.ElasticRepository import ElasticRepository
+from .DocumentIngestor import DocumentIngestor
 
 
 class PDFIngestor(DocumentIngestor):
     """Ingestor for PDF documents"""
 
     def __init__(self):
-        self.vectorstore = ElasticVectorSearch(
-            elasticsearch_url='http://localhost:9200',
-            index_name="pythia",
-            embedding=HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
-        )
+        self.vectorstore = ElasticRepository()
 
     def ingest(self, document_path: str):
         """Ingests a PDF document into the database"""
