@@ -6,6 +6,6 @@ if __name__ == "__main__":
     pdf_ingestor.ingest("/home/daniel/Documents/Attention Is All You Need.pdf")
 
     repository = ElasticRepository()
-    results = repository.search("What are transformers?")
+    results = repository.search("Who are the authors?")
 
     print(results[0].page_content)
